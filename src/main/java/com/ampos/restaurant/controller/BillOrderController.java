@@ -42,7 +42,7 @@ public class BillOrderController {
 
     /**
      * Get the bill order by bill id
-     * @param billId
+     * @param billIde
      * @return
      */
     @GetMapping(path = "/")

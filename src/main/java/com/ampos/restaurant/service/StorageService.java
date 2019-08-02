@@ -25,8 +25,12 @@ public class StorageService {
      */
     public void init() {
         try {
-            Files.createDirectory(rootLocation);
+        	if (Files.notExists(rootLocation)) {
+        		 Files.createDirectory(rootLocation);
+			}
+           
         } catch (IOException e) {
+        	
             throw new RuntimeException("Could not initialize storage!");
         }
     }
