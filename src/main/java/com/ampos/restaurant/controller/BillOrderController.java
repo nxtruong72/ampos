@@ -34,7 +34,7 @@ public class BillOrderController {
      * Get all bill orders
      * @return
      */
-    @GetMapping(path = "/")
+    @GetMapping(path = "/all")
     public List<BillReportDto> getAll() {
         List<BillOrder> billOrders = billService.getAll();
         return billOrders.stream().map(bill -> convertToReportDto(bill)).collect(Collectors.toList());
