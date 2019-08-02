@@ -45,4 +45,12 @@ public interface IMenuItemService {
      * @return
      */
     public List<MenuItem> searchItem(String keyword);
+
+    /**
+     * Get price of this bill base on the menu item name and its quantity
+     * @param itemName
+     * @param quantity
+     * @return
+     */
+    public int getTotalPrice(String itemName, int quantity);
 }

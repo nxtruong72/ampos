@@ -5,10 +5,12 @@ import com.ampos.restaurant.repository.BillOrderRepository;
 import com.ampos.restaurant.service.IBillService;
 import com.ampos.restaurant.specification.BillOrderSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class IBillServiceImpl implements IBillService {
+@Service
+public class BillServiceImpl implements IBillService {
     @Autowired
     private BillOrderRepository billOrderRepository;
 

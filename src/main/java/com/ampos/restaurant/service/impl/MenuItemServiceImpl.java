@@ -9,30 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class IMenuItemServiceImpl implements IMenuItemService {
+@Service
+public class MenuItemServiceImpl implements IMenuItemService {
     Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     @Autowired
     private MenuItemRepository menuItemRepository;
 
-//    @Override
-//    public List<MenuItem> getMenuList(int from, int amount) {
-//        List<MenuItem> ret = new ArrayList<>();
-//
-//        for (int i = from, counter = 0; i < menuData.menuItemList.size() && counter < amount; i++, counter++) {
-//            ret.add(menuData.menuItemList.get(i));
-//        }
-//
-//        return ret;
-//    }
-//
-//    @Override
-//    public int getTotalItem() {
-//        return menuData.menuItemList.size();
-//    }
     @Override
     public Page<MenuItem> getMenuPage(PageRequest pageRequest) {
         return menuItemRepository.findAll(pageRequest);
@@ -65,5 +52,11 @@ public class IMenuItemServiceImpl implements IMenuItemService {
     @Override
     public List<MenuItem> searchItem(String keyword) {
         return menuItemRepository.findAll(new MenuItemSpecification(keyword));
+    }
+
+    @Override
+    public int getTotalPrice(String itemName, int quantity) {
+        MenuItem menuItem = menuItemRepository.findByName(itemName);
+        return menuItem.getPrice()*quantity;
     }
 }

@@ -1,5 +1,6 @@
 package com.ampos.restaurant.controller;
 
+import com.ampos.restaurant.exception.ApplicationException;
 import com.ampos.restaurant.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -17,10 +18,15 @@ import java.util.List;
 @RequestMapping(path = "/files")
 public class FileUploadController {
     @Autowired
-    StorageService storageService;
+    private StorageService storageService;
 
     List<String> files = new ArrayList<String>();
 
+    /**
+     * Upload a file and store in the data folder
+     * @param file
+     * @return
+     */
     @PostMapping("/upload")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         String message = "";
@@ -36,9 +42,14 @@ public class FileUploadController {
         }
     }
 
+    /**
+     * Load a file with filename from data folder
+     * @param filename
+     * @return
+     */
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws ApplicationException {
         Resource file = storageService.loadFile(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
