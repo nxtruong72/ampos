@@ -1,27 +1,11 @@
 package com.ampos.restaurant.model.dto;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "menu")
-public class MenuItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class MenuItemDto {
     private Integer id;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "image_name")
     private String imageName;
-
-    @Column(name = "additional_details")
     private String additionalDetails;
-
-    @Column(name = "price")
     private Integer price;
 
     public int getId() {

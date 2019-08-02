@@ -1,12 +1,13 @@
 package com.ampos.restaurant.controller;
 
 import com.ampos.restaurant.model.MenuItem;
-import com.ampos.restaurant.service.impl.IMenuItemServiceImpl;
+import com.ampos.restaurant.model.dto.MenuItemDto;
+import com.ampos.restaurant.service.impl.MenuItemServiceImpl;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,11 @@ import java.util.stream.IntStream;
 @RequestMapping(path = "/item")
 public class MenuController {
     @Autowired
-    private IMenuItemServiceImpl menuItemService;
+    private MenuItemServiceImpl menuItemService;
 
-    @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    private ModelMapper modelMapper = new ModelMapper();
+
+    @GetMapping(path = "/")
     public ModelAndView getMenuPage(@RequestParam int page, @RequestParam int pageSize) {
         ModelAndView modelAndView = new ModelAndView();
         PageRequest pageRequest = PageRequest.of(page-1, pageSize);
@@ -38,40 +41,38 @@ public class MenuController {
         return modelAndView;
     }
 
-    @PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> create(@RequestBody MenuItem menuItem) {
-        if (menuItemService.createItem(menuItem)) {
+    @PostMapping(path = "/")
+    public ResponseEntity<String> create(@RequestBody MenuItemDto menuItemDto) {
+        if (menuItemService.createItem(modelMapper.map(menuItemDto, MenuItem.class))) {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully create item");
         } else {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to create item");
         }
     }
 
-    @PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody MenuItem menuItem) {
-        if (menuItemService.updateItem(menuItem)) {
+    @PutMapping(path = "/")
+    public ResponseEntity<String> update(@RequestBody MenuItemDto menuItemDto) {
+        if (menuItemService.updateItem(modelMapper.map(menuItemDto, MenuItem.class))) {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully upate item");
         } else {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to update item");
         }
     }
 
-    @DeleteMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> remove(@RequestBody MenuItem menuItem) {
-        if (menuItemService.removeItem(menuItem)) {
+    @DeleteMapping(path = "/")
+    public ResponseEntity<String> remove(@RequestBody MenuItemDto menuItemDto) {
+        if (menuItemService.removeItem(modelMapper.map(menuItemDto, MenuItem.class))) {
             return ResponseEntity.status(HttpStatus.OK).body("Successfully delete item");
         } else {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to delete item");
         }
     }
 
-    @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MenuItem>> searchItem(@RequestParam String keyword) {
-        List<MenuItem> item = menuItemService.searchItem(keyword);
-        if (item == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok().body(item);
-        }
+    @GetMapping(path = "/search")
+    public List<MenuItemDto> searchItem(@RequestParam String keyword) {
+        List<MenuItem> items = menuItemService.searchItem(keyword);
+        return items.stream()
+                .map(item -> modelMapper.map(item, MenuItemDto.class))
+                .collect(Collectors.toList());
     }
 }
