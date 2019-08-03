@@ -8,7 +8,24 @@ public class MenuItemDto {
     private String additionalDetails;
     private Integer price;
 
-    public int getId() {
+    
+    
+    public MenuItemDto() {
+		super();
+	}
+
+	public MenuItemDto(Integer id, String name, String description, String imageName, String additionalDetails,
+			Integer price) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.imageName = imageName;
+		this.additionalDetails = additionalDetails;
+		this.price = price;
+	}
+
+	public int getId() {
         return id;
     }
 
@@ -55,4 +72,5 @@ public class MenuItemDto {
     public void setPrice(int price) {
         this.price = price;
     }
+    
 }

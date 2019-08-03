@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class MenuItemServiceImpl implements IMenuItemService {
     private MenuItemRepository menuItemRepository;
 
     @Override
-    public Page<MenuItem> getMenuPage(PageRequest pageRequest) {
+    public Page<MenuItem> getMenuPage(Pageable pageRequest) {
         return menuItemRepository.findAll(pageRequest);
     }
 
@@ -42,6 +43,7 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
     @Override
     public boolean removeItem(MenuItem menuItem) {
+    	System.out.println(menuItemRepository.getOne(menuItem.getId()));
         if (menuItem == null || menuItemRepository.getOne(menuItem.getId()) == null) {
             return false;
         }

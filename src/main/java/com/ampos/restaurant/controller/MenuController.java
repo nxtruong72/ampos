@@ -1,23 +1,28 @@
 package com.ampos.restaurant.controller;
 
-import com.ampos.restaurant.model.MenuItem;
-import com.ampos.restaurant.model.dto.MenuItemDto;
-import com.ampos.restaurant.service.impl.MenuItemServiceImpl;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import com.ampos.restaurant.model.MenuItem;
+import com.ampos.restaurant.model.dto.MenuItemDto;
+import com.ampos.restaurant.service.impl.MenuItemServiceImpl;
 
-@Controller
+@RestController
 @RequestMapping(path = "/item")
 public class MenuController {
     @Autowired
@@ -25,20 +30,21 @@ public class MenuController {
 
     private ModelMapper modelMapper = new ModelMapper();
 
-    @GetMapping(path = "/")
-    public ModelAndView getMenuPage(@RequestParam int page, @RequestParam int pageSize) {
-        ModelAndView modelAndView = new ModelAndView();
-        PageRequest pageRequest = PageRequest.of(page-1, pageSize);
-        Page<MenuItem> menuPage = menuItemService.getMenuPage(pageRequest);
-        int totalPages = menuPage.getTotalPages();
-
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
-            modelAndView.addObject("pageNumbers", pageNumbers);
-        }
-        modelAndView.addObject("menuItemList", menuPage.getContent());
-
-        return modelAndView;
+    @GetMapping(path = "")
+    public Page<MenuItem> getMenuPage(Pageable pageable) {
+//        ModelAndView modelAndView = new ModelAndView();
+//        PageRequest pageRequest = PageRequest.of(page-1, pageSize);
+//        Page<MenuItem> menuPage = menuItemService.getMenuPage(pageRequest);
+//        int totalPages = menuPage.getTotalPages();
+//
+//        if (totalPages > 0) {
+//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
+//            modelAndView.addObject("pageNumbers", pageNumbers);
+//        }
+//        modelAndView.addObject("menuItemList", menuPage.getContent());
+//
+//        return modelAndView;
+    	return menuItemService.getMenuPage(pageable);
     }
 
     @PostMapping(path = "/")

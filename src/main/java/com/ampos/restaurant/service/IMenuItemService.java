@@ -1,10 +1,11 @@
 package com.ampos.restaurant.service;
 
-import com.ampos.restaurant.model.MenuItem;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.ampos.restaurant.model.MenuItem;
 
 public interface IMenuItemService {
     /**
@@ -12,7 +13,7 @@ public interface IMenuItemService {
      * @param pageRequest
      * @return
      */
-    public Page<MenuItem> getMenuPage(PageRequest pageRequest);
+    public Page<MenuItem> getMenuPage(Pageable pageRequest);
 
     /**
      * Create the new item
