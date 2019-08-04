@@ -7,6 +7,8 @@ public class BillId implements Serializable {
     private Integer id;
     private String itemName;
     private Date orderedTime;
+    
+    
 
     public BillId() {
     }

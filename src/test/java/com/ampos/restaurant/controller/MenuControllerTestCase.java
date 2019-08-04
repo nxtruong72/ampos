@@ -13,14 +13,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.MimeTypeUtils;
-import org.springframework.web.util.NestedServletException;
 
 import com.ampos.restaurant.BaseTestCase;
 import com.ampos.restaurant.model.MenuItem;
@@ -46,10 +44,7 @@ public class MenuControllerTestCase extends BaseTestCase {
 
 	}
 
-	@After
-	public void teardown() {
-
-	}
+	
 
 	/**
 	 * test case for create menu successfully
@@ -132,18 +127,12 @@ public class MenuControllerTestCase extends BaseTestCase {
 		MenuItemDto input = new MenuItemDto(11, "Xiaolongbao", "Chinese steamed bun",
 				"https://s3-ap-southeast-1.amazonaws.com/interview.ampostech.com/backend/restaurant/menu3.jpg",
 				"Italian Thai", 200);
-		try {
-			MvcResult result = mockMvc.perform(
-					put("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
-					.andExpect(status().is(417)).andReturn();
 
-		} catch (NestedServletException e) {
-			assertTrue(true);
+		MvcResult result = mockMvc
+				.perform(put("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
+				.andExpect(status().is(417)).andReturn();
 
-		}
-
-		// assertEquals("Failed to update item",
-		// result.getResponse().getContentAsString());
+		assertEquals("Failed to update item", result.getResponse().getContentAsString());
 
 	}
 
@@ -181,15 +170,12 @@ public class MenuControllerTestCase extends BaseTestCase {
 				"Traditional side dish made from salted and fermented vegetables",
 				"https://s3-ap-southeast-1.amazonaws.com/interview.ampostech.com/backend/restaurant/menu1.jpg",
 				"Italian Thai", 400);
-		try {
-			MvcResult result = mockMvc.perform(
-					delete("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
-					.andExpect(status().is(404)).andReturn();
 
-		} catch (NestedServletException e) {
-			assertTrue(true);
-
-		}
+		MvcResult result = mockMvc
+				.perform(
+						delete("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
+				.andExpect(status().is(417)).andReturn();
+		assertEquals("Failed to delete item", result.getResponse().getContentAsString());
 
 	}
 

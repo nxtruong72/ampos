@@ -36,6 +36,7 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public List<BillOrder> searchBill(int billId) {
-        return billOrderRepository.findAll(new BillOrderSpecification(billId));
+    	return billOrderRepository.findById_Id(billId);
+       // return billOrderRepository.findAll(new BillOrderSpecification(billId));
     }
 }
