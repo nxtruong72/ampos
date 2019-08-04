@@ -18,6 +18,6 @@ public class BillOrderSpecification implements Specification<BillOrder> {
 
     @Override
     public Predicate toPredicate(Root<BillOrder> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        return criteriaBuilder.equal(root.<String>get("id"), billId);
+        return criteriaBuilder.equal(root.<String>get("id").get("id"), billId);
     }
 }

@@ -1,5 +1,6 @@
 package com.ampos.restaurant.service;
 
+import com.ampos.restaurant.exception.ApplicationException;
 import com.ampos.restaurant.model.BillOrder;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface IBillService {
      * @param billOrder
      * @return
      */
-    public boolean createBill(BillOrder billOrder);
+    public void createBill(BillOrder billOrder) throws ApplicationException;
 
     /**
      * Update a bill order
@@ -26,7 +27,7 @@ public interface IBillService {
      * @param billOrder
      * @return
      */
-    public boolean updateBill(BillOrder billOrder);
+    public void updateBill(BillOrder billOrder) throws ApplicationException;
 
     /**
      * Search a bill order with bill id
@@ -34,5 +35,5 @@ public interface IBillService {
      * @param billId
      * @return
      */
-    public List<BillOrder> searchBill(int billId);
+    public List<BillOrder> searchBill(int billId) throws ApplicationException;
 }

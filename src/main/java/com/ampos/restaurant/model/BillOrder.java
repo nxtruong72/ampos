@@ -15,6 +15,10 @@ public class BillOrder {
         return id;
     }
 
+    public void setId(BillId id) {
+        this.id = id;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }

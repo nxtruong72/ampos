@@ -2,6 +2,7 @@ package com.ampos.restaurant.service;
 
 import java.util.List;
 
+import com.ampos.restaurant.exception.ApplicationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,7 +14,7 @@ public interface IMenuItemService {
      * @param pageRequest
      * @return
      */
-    public Page<MenuItem> getMenuPage(Pageable pageRequest);
+    public Page<MenuItem> getMenuPage(Pageable pageRequest) throws ApplicationException;
 
     /**
      * Create the new item
@@ -21,15 +22,14 @@ public interface IMenuItemService {
      * @param menuItem
      * @return
      */
-    public boolean createItem(MenuItem menuItem);
+    public void createItem(MenuItem menuItem) throws ApplicationException;
 
     /**
      * Update the item if it is exist, or else return false
      *
      * @param menuItem
-     * @return
      */
-    public boolean updateItem(MenuItem menuItem);
+    public void updateItem(MenuItem menuItem) throws ApplicationException;
 
     /**
      * Find and remove the item
@@ -37,7 +37,7 @@ public interface IMenuItemService {
      * @param menuItem
      * @return
      */
-    public boolean removeItem(MenuItem menuItem);
+    public void removeItem(MenuItem menuItem) throws ApplicationException;
 
     /**
      * Search item based on the keyword that has appear in the title, description or additional details
@@ -45,7 +45,7 @@ public interface IMenuItemService {
      * @param keyword
      * @return
      */
-    public List<MenuItem> searchItem(String keyword);
+    public List<MenuItem> searchItem(String keyword) throws ApplicationException;
 
     /**
      * Get price of this bill base on the menu item name and its quantity
@@ -53,5 +53,5 @@ public interface IMenuItemService {
      * @param quantity
      * @return
      */
-    public int getTotalPrice(String itemName, int quantity);
+    public int getTotalPrice(String itemName, int quantity) throws ApplicationException;
 }

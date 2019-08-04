@@ -1,5 +1,6 @@
 package com.ampos.restaurant.service.impl;
 
+import com.ampos.restaurant.exception.ApplicationException;
 import com.ampos.restaurant.model.BillOrder;
 import com.ampos.restaurant.repository.BillOrderRepository;
 import com.ampos.restaurant.service.IBillService;
@@ -20,19 +21,17 @@ public class BillServiceImpl implements IBillService {
     }
 
     @Override
-    public boolean createBill(BillOrder billOrder) {
-        if (billOrder == null || billOrderRepository.getOne(billOrder.getId()) != null)
-            return false;
+    public void createBill(BillOrder billOrder) throws ApplicationException {
+        if (billOrder == null || billOrderRepository.existsById(billOrder.getId()))
+            throw new ApplicationException("Cannot create bill");
         billOrderRepository.save(billOrder);
-        return true;
     }
 
     @Override
-    public boolean updateBill(BillOrder billOrder) {
-        if (billOrder == null || billOrderRepository.getOne(billOrder.getId()) == null)
-            return false;
+    public void updateBill(BillOrder billOrder) throws ApplicationException {
+        if (billOrder == null || !billOrderRepository.existsById(billOrder.getId()))
+            throw new ApplicationException("Cannot update bill");
         billOrderRepository.save(billOrder);
-        return true;
     }
 
     @Override

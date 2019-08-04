@@ -1,5 +1,6 @@
 package com.ampos.restaurant.service.impl;
 
+import com.ampos.restaurant.exception.ApplicationException;
 import com.ampos.restaurant.model.MenuItem;
 import com.ampos.restaurant.repository.MenuItemRepository;
 import com.ampos.restaurant.service.IMenuItemService;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,28 +27,35 @@ public class MenuItemServiceImpl implements IMenuItemService {
     }
 
     @Override
-    public boolean createItem(MenuItem menuItem) {
+    public void createItem(MenuItem menuItem) throws ApplicationException {
+        if (menuItem == null || !menuItemRepository.findByName(menuItem.getName()).isEmpty())
+            throw new ApplicationException("Cannot create menu item");
         menuItemRepository.save(menuItem);
-        return true;
     }
 
     @Override
-    public boolean updateItem(MenuItem menuItem) {
-        if (menuItem == null || menuItemRepository.getOne(menuItem.getId()) == null) {
-            return false;
+    public void updateItem(MenuItem menuItem) throws ApplicationException {
+        List<MenuItem> menuItems = menuItemRepository.findByName(menuItem.getName());
+        MenuItem updateItem;
+
+        if (menuItem == null || menuItems.isEmpty()) {
+            throw new ApplicationException("Cannot update menu item");
         }
-        menuItemRepository.save(menuItem);
-        return true;
+        updateItem = menuItemRepository.findById(menuItems.get(0).getId()).orElse(new MenuItem());
+        updateItem.setName(menuItem.getName());
+        updateItem.setImageName(menuItem.getImageName());
+        updateItem.setDescription(menuItem.getDescription());
+        updateItem.setAdditionalDetails(menuItem.getAdditionalDetails());
+        updateItem.setPrice(menuItem.getPrice());
+        menuItemRepository.save(updateItem);
     }
 
     @Override
-    public boolean removeItem(MenuItem menuItem) {
-    	System.out.println(menuItemRepository.getOne(menuItem.getId()));
-        if (menuItem == null || menuItemRepository.getOne(menuItem.getId()) == null) {
-            return false;
+    public void removeItem(MenuItem menuItem) throws ApplicationException {
+        if (menuItem == null || menuItemRepository.findByName(menuItem.getName()).isEmpty()) {
+            throw new ApplicationException("Cannot remove menu item");
         }
-        menuItemRepository.delete(menuItem);
-        return true;
+        menuItemRepository.deleteByName(menuItem.getName());
     }
 
     @Override
@@ -57,8 +64,10 @@ public class MenuItemServiceImpl implements IMenuItemService {
     }
 
     @Override
-    public int getTotalPrice(String itemName, int quantity) {
-        MenuItem menuItem = menuItemRepository.findByName(itemName);
-        return menuItem.getPrice()*quantity;
+    public int getTotalPrice(String itemName, int quantity) throws ApplicationException {
+        List<MenuItem> menuItems = menuItemRepository.findByName(itemName);
+        if (menuItems.isEmpty())
+            throw new ApplicationException("Cannot find menu item: " + itemName);
+        return menuItems.get(0).getPrice() * quantity;
     }
 }

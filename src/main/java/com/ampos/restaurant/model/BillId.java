@@ -8,6 +8,15 @@ public class BillId implements Serializable {
     private String itemName;
     private Date orderedTime;
 
+    public BillId() {
+    }
+
+    public BillId(Integer id, String itemName, Date orderedTime) {
+        this.id = id;
+        this.itemName = itemName;
+        this.orderedTime = orderedTime;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

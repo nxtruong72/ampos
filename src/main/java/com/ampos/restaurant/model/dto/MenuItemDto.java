@@ -8,8 +8,6 @@ public class MenuItemDto {
     private String additionalDetails;
     private Integer price;
 
-    
-    
     public MenuItemDto() {
 		super();
 	}

@@ -1,5 +1,7 @@
 package com.ampos.restaurant.controller;
 
+import com.ampos.restaurant.exception.ApplicationException;
+import com.ampos.restaurant.model.BillId;
 import com.ampos.restaurant.model.BillOrder;
 import com.ampos.restaurant.model.dto.BillOrderDto;
 import com.ampos.restaurant.model.dto.BillReportDto;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,86 +36,96 @@ public class BillOrderController {
 
     /**
      * Get all bill orders
+     *
      * @return
      */
     @GetMapping(path = "/all")
-    public List<BillReportDto> getAll() {
+    public BillReportDto getAll() throws ApplicationException {
         List<BillOrder> billOrders = billService.getAll();
-        return billOrders.stream().map(bill -> convertToReportDto(bill)).collect(Collectors.toList());
+        return convertToReportDto(billOrders);
     }
 
     /**
      * Get the bill order by bill id
-     * @param billIde
+     *
+     * @param billId
      * @return
      */
-    @GetMapping(path = "/")
-    public List<BillReportDto> getBillOrder(@RequestParam int billId) {
+    @GetMapping(path = "/test")
+    public String getBillOrder(@RequestParam int billId) throws ApplicationException {
         List<BillOrder> billOrders = billService.searchBill(billId);
-        return billOrders.stream().map(bill -> convertToReportDto(bill)).collect(Collectors.toList());
+        BillReportDto billReportDto = convertToReportDto(billOrders);
+        System.out.println(billReportDto.toString());
+        return "XXX";
     }
 
     /**
      * Create a new bill order
+     *
      * @param billOrderDto
      * @return
      */
-    @PostMapping(path = "/")
-    public ResponseEntity<String> createBill(@RequestBody BillOrderDto billOrderDto) {
-        try {
-            BillOrder billOrder = convertToEntity(billOrderDto);
-            if (billService.createBill(billOrder)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Successfully create bill");
-            } else {
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to create bill");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to create bill");
-        }
+    @PostMapping
+    public ResponseEntity<String> createBill(@RequestBody BillOrderDto billOrderDto) throws ApplicationException, ParseException {
+        BillOrder billOrder = convertToEntity(billOrderDto);
+        billService.createBill(billOrder);
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully create bill");
     }
 
     /**
      * Update info of a bill order
+     *
      * @param billOrderDto
      * @return
      */
-    @PutMapping(path = "/")
-    public ResponseEntity<String> updateBill(@RequestBody BillOrderDto billOrderDto) {
+    @PutMapping
+    public ResponseEntity<String> updateBill(@RequestBody BillOrderDto billOrderDto) throws ApplicationException {
         try {
             BillOrder billOrder = convertToEntity(billOrderDto);
-            if (billService.createBill(billOrder)) {
-                return ResponseEntity.status(HttpStatus.OK).body("Successfully update bill");
-            } else {
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to update bill");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to update bill");
+            billService.createBill(billOrder);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully update bill");
+        } catch (ParseException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to convert bill to entity");
         }
     }
 
     /**
      * Calculate the total price and then convert to BillReportDto
-     * @param billOrder
+     *
+     * @param billOrders
      * @return
      */
-    private BillReportDto convertToReportDto(BillOrder billOrder) {
-        String itemName = billOrder.getId().getItemName();
-        int quantity = billOrder.getQuantity();
-        int totalPrice = menuItemService.getTotalPrice(itemName, quantity);
+    private BillReportDto convertToReportDto(List<BillOrder> billOrders) throws ApplicationException {
+        BillReportDto billReportDto = new BillReportDto();
 
-        return new BillReportDto(itemName, quantity, totalPrice);
+        billOrders.forEach(e -> {
+            try {
+                String itemName = e.getId().getItemName();
+                int quantity = e.getQuantity();
+                int totalPrice = menuItemService.getTotalPrice(itemName, quantity);
+
+                billReportDto.addItem(itemName, quantity, totalPrice);
+            } catch (ApplicationException ex) {
+                // do nothing
+            }
+        });
+
+        return billReportDto;
     }
 
     /**
      * Convert BillOderDto to BillOrder
+     *
      * @param billOrderDto
      * @return
      * @throws ParseException
      */
     private BillOrder convertToEntity(BillOrderDto billOrderDto) throws ParseException {
-        BillOrder billOrder = modelMapper.map(billOrderDto, BillOrder.class);
+        BillOrder billOrder = new BillOrder();
+        BillId billId = new BillId(billOrderDto.getId(), billOrderDto.getItemName(), billOrderDto.getOrderedTimeCoverted(TIME_ZONE));
 
-        billOrder.getId().setOrderedTime(billOrderDto.getOrderedTimeCoverted(TIME_ZONE));
+        billOrder.setId(billId);
+        billOrder.setQuantity(billOrderDto.getQuantity());
 
         return billOrder;
     }
