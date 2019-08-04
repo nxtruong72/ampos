@@ -1,7 +1,5 @@
 package com.ampos.restaurant.model.dto;
 
-import com.ampos.restaurant.model.BillId;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,8 +11,22 @@ public class BillOrderDto {
     private String itemName;
     private String orderedTime;
     private Integer quantity;
+    
+    
 
-    public Date getOrderedTimeCoverted(String timezone) throws ParseException {
+    public BillOrderDto() {
+		super();
+	}
+
+	public BillOrderDto(Integer id, String itemName, String orderedTime, Integer quantity) {
+		super();
+		this.id = id;
+		this.itemName = itemName;
+		this.orderedTime = orderedTime;
+		this.quantity = quantity;
+	}
+
+	public Date getOrderedTimeCoverted(String timezone) throws ParseException {
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
         return dateFormat.parse(this.orderedTime);
     }

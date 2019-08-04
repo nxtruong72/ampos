@@ -34,7 +34,7 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
     @Override
     public boolean updateItem(MenuItem menuItem) {
-        if (menuItem == null || menuItemRepository.getOne(menuItem.getId()) == null) {
+        if (menuItem == null || !menuItemRepository.existsById(menuItem.getId())) {
             return false;
         }
         menuItemRepository.save(menuItem);
@@ -43,8 +43,8 @@ public class MenuItemServiceImpl implements IMenuItemService {
 
     @Override
     public boolean removeItem(MenuItem menuItem) {
-    	System.out.println(menuItemRepository.getOne(menuItem.getId()));
-        if (menuItem == null || menuItemRepository.getOne(menuItem.getId()) == null) {
+    	
+        if (menuItem == null || !menuItemRepository.existsById(menuItem.getId())) {
             return false;
         }
         menuItemRepository.delete(menuItem);

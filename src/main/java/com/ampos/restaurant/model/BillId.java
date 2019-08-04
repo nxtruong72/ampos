@@ -7,8 +7,29 @@ public class BillId implements Serializable {
     private Integer id;
     private String itemName;
     private Date orderedTime;
+    
+    
 
-    @Override
+    public BillId() {
+		super();
+	}
+    
+
+	public BillId(Integer id, String itemName) {
+		super();
+		this.id = id;
+		this.itemName = itemName;
+	}
+
+
+	public BillId(Integer id, String itemName, Date orderedTime) {
+		super();
+		this.id = id;
+		this.itemName = itemName;
+		this.orderedTime = orderedTime;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

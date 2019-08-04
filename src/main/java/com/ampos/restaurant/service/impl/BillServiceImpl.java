@@ -21,7 +21,7 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public boolean createBill(BillOrder billOrder) {
-        if (billOrder == null || billOrderRepository.getOne(billOrder.getId()) != null)
+        if (billOrder == null || billOrderRepository.existsById(billOrder.getId()))
             return false;
         billOrderRepository.save(billOrder);
         return true;
@@ -29,7 +29,7 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public boolean updateBill(BillOrder billOrder) {
-        if (billOrder == null || billOrderRepository.getOne(billOrder.getId()) == null)
+        if (billOrder == null || !billOrderRepository.existsById(billOrder.getId()))
             return false;
         billOrderRepository.save(billOrder);
         return true;
@@ -37,6 +37,7 @@ public class BillServiceImpl implements IBillService {
 
     @Override
     public List<BillOrder> searchBill(int billId) {
-        return billOrderRepository.findAll(new BillOrderSpecification(billId));
+    	return billOrderRepository.findById_Id(billId);
+       // return billOrderRepository.findAll(new BillOrderSpecification(billId));
     }
 }
