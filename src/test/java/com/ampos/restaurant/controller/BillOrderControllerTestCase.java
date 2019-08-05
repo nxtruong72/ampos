@@ -1,8 +1,10 @@
 package com.ampos.restaurant.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -98,7 +100,7 @@ public class BillOrderControllerTestCase extends BaseTestCase {
 		MvcResult result = mockMvc
 				.perform(post("/bill/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
 				.andExpect(status().is(417)).andReturn();
-		//assertEquals("Failed to create bill", result.getResponse().getContentAsString());
+		
 
 	}
 
@@ -111,14 +113,12 @@ public class BillOrderControllerTestCase extends BaseTestCase {
 	@Test
 	public void getBillOrderSuccessfully() throws IOException, Exception {
 		// expected data
+		BillReportDto expectedOutput = new BillReportDto();
+		expectedOutput.addItem("Chicken Tom Yum Pizza", 2, 600);
+		expectedOutput.addItem("Kimchi", 2, 800);
 
-		// expected data
-		List<BillReportDto> expectedData = new ArrayList<>();
-		//expectedData.add(new BillReportDto("Chicken Tom Yum Pizza", 2, 600));
-		//expectedData.add(new BillReportDto("Kimchi", 2, 800));
-
-		MvcResult result = mockMvc.perform(get("/bill/1")).andExpect(status().is(200)).andReturn();
-		assertEquals(result.getResponse().getContentAsString(), asJsonString(expectedData));
+		MvcResult result = mockMvc.perform(get("/bill?billId=1")).andExpect(status().is(200)).andReturn();
+		assertEquals(result.getResponse().getContentAsString(), asJsonString(expectedOutput));
 
 	}
 
@@ -131,13 +131,13 @@ public class BillOrderControllerTestCase extends BaseTestCase {
 	@Test
 	public void getBillOrderAllSuccessfully() throws IOException, Exception {
 		// expected data
-		List<BillReportDto> expectedData = new ArrayList<>();
-		//expectedData.add(new BillReportDto("Kimchi", 2, 800));
-		//expectedData.add(new BillReportDto("Chicken Tom Yum Pizza", 2, 600));
-		//expectedData.add(new BillReportDto("Chicken Tom Yum Pizza", 2, 600));
+
+		BillReportDto expectedOutput = new BillReportDto();
+		expectedOutput.addItem("Chicken Tom Yum Pizza", 4, 1200);
+		expectedOutput.addItem("Kimchi", 2, 800);
 
 		MvcResult result = mockMvc.perform(get("/bill/all")).andExpect(status().is(200)).andReturn();
-		assertEquals(asJsonString(expectedData), result.getResponse().getContentAsString());
+		assertEquals(asJsonString(expectedOutput), result.getResponse().getContentAsString());
 
 	}
 
@@ -179,7 +179,46 @@ public class BillOrderControllerTestCase extends BaseTestCase {
 		MvcResult result = mockMvc
 				.perform(put("/bill/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
 				.andExpect(status().is(417)).andReturn();
-		//assertEquals("Failed to update bill", result.getResponse().getContentAsString());
+
+	}
+
+	/**
+	 * Test case for delete bill successfully
+	 * 
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteBillOrderSuccessfully() throws IOException, Exception {
+
+		// input
+		BillOrderDto input = new BillOrderDto(1, "Kimchi", "09/12/2019 11:11:11", 3);
+
+		MvcResult result = mockMvc
+				.perform(
+						delete("/bill/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
+				.andExpect(status().is(200)).andReturn();
+		assertEquals("Successfully remove bill", result.getResponse().getContentAsString());
+		// check database
+		BillId id = new BillId(1, "Kimchi", DateUtil.convertStringToDate("09/12/2019 11:11:11", "GMT+7:00"));
+		assertFalse(billOrderRepository.existsById(id));
+
+	}
+
+	/**
+	 * Test case for delete bill failed
+	 * 
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteBillOrderFail() throws IOException, Exception {
+
+		// input
+		BillOrderDto input = new BillOrderDto(2, "Kimchi", "09/12/2019 11:11:11", 2);
+
+		mockMvc.perform(delete("/bill/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
+				.andExpect(status().is(417)).andReturn();
 
 	}
 

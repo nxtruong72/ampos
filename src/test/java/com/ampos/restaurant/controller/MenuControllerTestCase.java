@@ -1,7 +1,6 @@
 package com.ampos.restaurant.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -95,7 +94,7 @@ public class MenuControllerTestCase extends BaseTestCase {
 	}
 
 	/**
-	 * Test case for update menu pass
+	 * Test case for update menu in passed
 	 * 
 	 * @throws IOException
 	 * @throws Exception
@@ -128,16 +127,16 @@ public class MenuControllerTestCase extends BaseTestCase {
 				"https://s3-ap-southeast-1.amazonaws.com/interview.ampostech.com/backend/restaurant/menu3.jpg",
 				"Italian Thai", 200);
 
-		MvcResult result = mockMvc
+		 mockMvc
 				.perform(put("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
 				.andExpect(status().is(417)).andReturn();
 
-		//assertEquals("Failed to update item", result.getResponse().getContentAsString());
+		
 
 	}
 
 	/**
-	 * Test case for delete menu pass
+	 * Test case for delete menu in passed
 	 * 
 	 * @throws IOException
 	 * @throws Exception
@@ -154,7 +153,7 @@ public class MenuControllerTestCase extends BaseTestCase {
 						delete("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
 				.andExpect(status().is(200)).andReturn();
 		assertEquals("Successfully delete item", result.getResponse().getContentAsString());
-		//assertFalse(muItemRepository.existsB);
+		assertTrue(muItemRepository.findByName("Kimchi").isEmpty());
 
 	}
 
@@ -171,11 +170,11 @@ public class MenuControllerTestCase extends BaseTestCase {
 				"https://s3-ap-southeast-1.amazonaws.com/interview.ampostech.com/backend/restaurant/menu1.jpg",
 				"Italian Thai", 400);
 
-		MvcResult result = mockMvc
+		 mockMvc
 				.perform(
 						delete("/item/").contentType(MimeTypeUtils.APPLICATION_JSON_VALUE).content(asJsonString(input)))
 				.andExpect(status().is(417)).andReturn();
-		//assertEquals("Failed to delete item", result.getResponse().getContentAsString());
+		
 
 	}
 
