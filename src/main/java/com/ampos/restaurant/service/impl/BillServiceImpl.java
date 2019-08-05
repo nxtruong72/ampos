@@ -40,4 +40,11 @@ public class BillServiceImpl implements IBillService {
     	return billOrderRepository.findById_Id(billId);
        // return billOrderRepository.findAll(new BillOrderSpecification(billId));
     }
+
+    @Override
+    public void removeBill(BillOrder billOrder) throws ApplicationException {
+        if (billOrder == null || !billOrderRepository.existsById(billOrder.getId()))
+            throw new ApplicationException("Cannot remove bill");
+        billOrderRepository.delete(billOrder);
+    }
 }

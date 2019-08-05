@@ -83,6 +83,17 @@ public class BillOrderController {
         }
     }
 
+    @DeleteMapping
+    public ResponseEntity<String> removeBill(@RequestBody BillOrderDto billOrderDto) throws ApplicationException {
+        try {
+            BillOrder billOrder = convertToEntity(billOrderDto);
+            billService.removeBill(billOrder);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully remove bill");
+        } catch (ParseException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to convert bill to entity");
+        }
+    }
+
     /**
      * Calculate the total price and then convert to BillReportDto
      *

@@ -36,4 +36,11 @@ public interface IBillService {
      * @return
      */
     public List<BillOrder> searchBill(int billId) throws ApplicationException;
+
+    /**
+     * Remove a bill order
+     * @param billOrder
+     * @throws ApplicationException
+     */
+    public void removeBill(BillOrder billOrder) throws ApplicationException;
 }
