@@ -11,8 +11,6 @@ public class BillOrderDto {
     private String itemName;
     private String orderedTime;
     private Integer quantity;
-    
-    
 
     public BillOrderDto() {
 		super();

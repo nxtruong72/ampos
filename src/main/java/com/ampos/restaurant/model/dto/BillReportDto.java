@@ -8,6 +8,13 @@ public class BillReportDto {
     Set<BillItem> items = new HashSet<>();
     int grandTotalPrice = 0;
 
+    public BillReportDto() {
+    }
+
+    public BillReportDto(String itemName, int quantity, int price) {
+        addItem(itemName, quantity, price);
+    }
+
     public void addItem(String itemName, int quantity, int price) {
         BillItem billItem = new BillItem(itemName, quantity, price);
         if (!items.contains(billItem)) {

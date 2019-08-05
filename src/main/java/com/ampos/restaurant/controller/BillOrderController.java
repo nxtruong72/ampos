@@ -7,23 +7,14 @@ import com.ampos.restaurant.model.dto.BillOrderDto;
 import com.ampos.restaurant.model.dto.BillReportDto;
 import com.ampos.restaurant.service.IBillService;
 import com.ampos.restaurant.service.IMenuItemService;
-
-import org.modelmapper.Converter;
-import org.modelmapper.Converters;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/bill")
@@ -56,12 +47,10 @@ public class BillOrderController {
      * @param billId
      * @return
      */
-    @GetMapping(path = "/test")
-    public String getBillOrder(@RequestParam int billId) throws ApplicationException {
+    @GetMapping
+    public BillReportDto getBillOrder(@RequestParam int billId) throws ApplicationException {
         List<BillOrder> billOrders = billService.searchBill(billId);
-        BillReportDto billReportDto = convertToReportDto(billOrders);
-        System.out.println(billReportDto.toString());
-        return "XXX";
+        return convertToReportDto(billOrders);
     }
 
     /**

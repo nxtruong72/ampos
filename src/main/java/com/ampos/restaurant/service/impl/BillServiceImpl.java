@@ -4,7 +4,6 @@ import com.ampos.restaurant.exception.ApplicationException;
 import com.ampos.restaurant.model.BillOrder;
 import com.ampos.restaurant.repository.BillOrderRepository;
 import com.ampos.restaurant.service.IBillService;
-import com.ampos.restaurant.specification.BillOrderSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

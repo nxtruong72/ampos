@@ -14,7 +14,6 @@ public class BillOrder {
     public BillId getId() {
         return id;
     }
-    
 
     public void setId(BillId id) {
         this.id = id;
@@ -38,7 +37,6 @@ public class BillOrder {
 		this.quantity = quantity;
 	}
 
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -47,7 +45,6 @@ public class BillOrder {
 		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
