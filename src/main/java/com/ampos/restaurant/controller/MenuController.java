@@ -23,29 +23,57 @@ public class MenuController {
 
     private ModelMapper modelMapper = new ModelMapper();
 
+    /**
+     * Get list of menu items with pagination
+     * @param pageable
+     * @return
+     */
     @GetMapping
     public Page<MenuItem> getMenuPage(Pageable pageable) {
         return menuItemService.getMenuPage(pageable);
     }
 
+    /**
+     * Create a menu item
+     * @param menuItemDto
+     * @return
+     * @throws ApplicationException
+     */
     @PostMapping
     public ResponseEntity<String> create(@RequestBody MenuItemDto menuItemDto) throws ApplicationException {
         menuItemService.createItem(modelMapper.map(menuItemDto, MenuItem.class));
         return ResponseEntity.status(HttpStatus.OK).body("Successfully create item");
     }
 
+    /**
+     * Update a menu item
+     * @param menuItemDto
+     * @return
+     * @throws ApplicationException
+     */
     @PutMapping
     public ResponseEntity<String> update(@RequestBody MenuItemDto menuItemDto) throws ApplicationException {
         menuItemService.updateItem(modelMapper.map(menuItemDto, MenuItem.class));
         return ResponseEntity.status(HttpStatus.OK).body("Successfully upate item");
     }
 
+    /**
+     * Delete a menu item
+     * @param menuItemDto
+     * @return
+     * @throws ApplicationException
+     */
     @DeleteMapping
     public ResponseEntity<String> remove(@RequestBody MenuItemDto menuItemDto) throws ApplicationException {
         menuItemService.removeItem(modelMapper.map(menuItemDto, MenuItem.class));
         return ResponseEntity.status(HttpStatus.OK).body("Successfully delete item");
     }
 
+    /**
+     * Search menu items by keyword that appear in the name, description or additional details
+     * @param keyword
+     * @return
+     */
     @GetMapping(path = "/search")
     public List<MenuItemDto> searchItem(@RequestParam String keyword) {
         List<MenuItem> items = menuItemService.searchItem(keyword);
