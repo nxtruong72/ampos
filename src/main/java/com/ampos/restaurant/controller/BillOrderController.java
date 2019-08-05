@@ -76,8 +76,19 @@ public class BillOrderController {
     public ResponseEntity<String> updateBill(@RequestBody BillOrderDto billOrderDto) throws ApplicationException {
         try {
             BillOrder billOrder = convertToEntity(billOrderDto);
-            billService.createBill(billOrder);
+            billService.updateBill(billOrder);
             return ResponseEntity.status(HttpStatus.OK).body("Successfully update bill");
+        } catch (ParseException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to convert bill to entity");
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> removeBill(@RequestBody BillOrderDto billOrderDto) throws ApplicationException {
+        try {
+            BillOrder billOrder = convertToEntity(billOrderDto);
+            billService.removeBill(billOrder);
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully remove bill");
         } catch (ParseException e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to convert bill to entity");
         }
