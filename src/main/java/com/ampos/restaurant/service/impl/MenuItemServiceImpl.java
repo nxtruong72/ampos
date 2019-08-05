@@ -64,10 +64,18 @@ public class MenuItemServiceImpl implements IMenuItemService {
     }
 
     @Override
-    public int getTotalPrice(String itemName, int quantity) throws ApplicationException {
+    public MenuItem findByName(String name) {
+        List<MenuItem> menuItems = menuItemRepository.findByName(name);
+        if (menuItems.isEmpty())
+            return new MenuItem();
+        return menuItems.get(0);
+    }
+
+    @Override
+    public int getTotalPrice(String itemName, int quantity) {
         List<MenuItem> menuItems = menuItemRepository.findByName(itemName);
         if (menuItems.isEmpty())
-            throw new ApplicationException("Cannot find menu item: " + itemName);
+            return -1;
         return menuItems.get(0).getPrice() * quantity;
     }
 }

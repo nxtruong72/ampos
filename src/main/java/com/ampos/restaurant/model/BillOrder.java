@@ -10,22 +10,7 @@ public class BillOrder {
     @EmbeddedId
     private BillId id;
     private Integer quantity;
-
-    public BillId getId() {
-        return id;
-    }
-
-    public void setId(BillId id) {
-        this.id = id;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
+    private Integer price;
 
 	public BillOrder() {
 		super();
@@ -67,7 +52,28 @@ public class BillOrder {
 			return false;
 		return true;
 	}
-    
-	
-    
+
+    public BillId getId() {
+        return id;
+    }
+
+    public void setId(BillId id) {
+        this.id = id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
 }

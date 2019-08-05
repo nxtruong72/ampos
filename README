@@ -1,0 +1,100 @@
+Project for SDE Backend: Restaurant
+
+This is the mini project about restaurant mangement. It provides use the way to manage menu and bill order information.
+It's built on a web service and provide some RESTful API for CRUD to manage menu item and bill order of restaurant.
+
+Assume we're running on localhost with port 8080.
+
+* Sample #1: json data for menu item:
+{
+	"id": 6,
+	"name": "Hawaiian Pizza",
+	"description": "Pizza",
+	"imageName": "pizza_image.jpg",
+	"additionalDetails": "Hot",
+	"price": 300
+}
+
+* Sample #2: input json data for bill order: 
+{
+  "id": 1,
+  "itemName": "Kimchi",
+  "orderedTime": "1/7/2019 09:00:00",
+  "quantity": 4
+}
+
+* Sample #3: response json data for bill order:
+{
+	"items": [
+		{
+			"itemName": "Hawaiian Pizza",
+			"quantity": 2,
+			"totalPrice": 600
+		},
+		{
+			"itemName": "Kimchi",
+			"quantity": 3,
+			"totalPrice": 150
+		}
+	],
+	"grandTotalPrice": 750
+}
+
+
+
+1. Menu items:
+* Image's info is stored in the imageName field.
+	- The software provides the REST API for allowing user to upload an image file to server.
+	- The software also provides the REST API for allowing user to download an image file by file name.
+	- These images will be stored in the data folder on server	
+	- Please refer to the sample #1 for more detail
+* Retrieve a menu list with pagination:
+	- Query these pieces of info by url: http://localhost:8080/item?page=0&size=20
+	- page is the page id.
+	- size is the number of items in a page.
+* Create a new menu item:
+	- url: http://localhost:8080/item
+	- Sending a rest API with POST method and the menu info - please refer to the sample #1 for more detail.
+	- If the item is existed, the error message will be returned.
+* Update an existed menu item:
+	- url: http://localhost:8080/item
+	- Sending a rest API with PUT method and the menu info - please refer to the sample #1 for more detail
+	- If the item is not existed, the error message will be returned.
+* Remove an existed menu item:
+	- url: http://localhost:8080/item
+	- Sending a rest API with DELETE method and the menu info - please refer to the sample #1 for more detail
+	- If the item is not existed, the error message will be returned.
+* Search a list of items with keyword
+	- Sample search with "Kim" keywork url: http://localhost:8080/item/search?keyword=Kim 
+	- Sending a rest API with GET method to matching keyword and return the list that matches title, description, additional details    
+	
+2. Bill order:
+* Retrieve all bill Ids:
+	- url: http://localhost:8080/bill/ids
+	- The list of distinct integer for bill Id will be returned.
+* Retrieve info of a specific bill order based on bill ID:
+	- url: http://localhost:8080/bill?billId=1
+	- The json structure of response is similar as the the Sample #3
+* Retrieve statistic for all bill orders :
+	- url: http://localhost:8080/bill/all
+	- It will return the statistic accross all bills, the info will be grouped by menu item name as below sample output
+	- The output is similar as the the Sample #3
+* Create a bill:
+	- url: http://localhost:8080/bill
+	- Send REST API with POST method and the bill order info - please refer to Sample 2 for more detail
+	- If the bill is existed, the error message will be returned.
+* Update a bill:
+	- url: http://localhost:8080/bill
+	- Send rest API with PUT method and the bill order info - please refer to Sample 2 for more detail
+	- If the bill is not existed, the error message will be returned.
+* Remove a bill:
+	- url: http://localhost:8080/bill
+	- Send rest API with DELETE method and the bill order info - please refer to Sample 2 for more detail
+	- If the bill is not existed, the error message will be returned.
+
+Note: In case of deleting a menu item that has appeared in the bill order to avoid missing info in the menu, I design the bill table with an extra column name "price", this price will be filled when creating the bill.
+- When fetching data for a bill, it will go through all thier items to check the existed, if there's an item has been deleted, it will use the "price" value to calculate the price. This way, the item was removed won't impact to the existed bill
+
+
+
+ 

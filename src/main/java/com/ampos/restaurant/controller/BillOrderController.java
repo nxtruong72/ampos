@@ -3,6 +3,7 @@ package com.ampos.restaurant.controller;
 import com.ampos.restaurant.exception.ApplicationException;
 import com.ampos.restaurant.model.BillId;
 import com.ampos.restaurant.model.BillOrder;
+import com.ampos.restaurant.model.MenuItem;
 import com.ampos.restaurant.model.dto.BillOrderDto;
 import com.ampos.restaurant.model.dto.BillReportDto;
 import com.ampos.restaurant.service.IBillService;
@@ -14,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @RestController
 @RequestMapping(path = "/bill")
@@ -29,6 +33,20 @@ public class BillOrderController {
     private IMenuItemService menuItemService;
 
     private ModelMapper modelMapper = new ModelMapper();
+
+    /**
+     * Get list of bill ids
+     * @return
+     */
+    @GetMapping(path = "/ids")
+    public Set<Integer> getIds() {
+        List<BillOrder> billOrders = billService.getAll();
+        Set<Integer> ret = new TreeSet<>();
+
+        billOrders.forEach(e -> ret.add(e.getId().getId()));
+
+        return ret;
+    }
 
     /**
      * Get all bill orders
@@ -62,7 +80,11 @@ public class BillOrderController {
     @PostMapping
     public ResponseEntity<String> createBill(@RequestBody BillOrderDto billOrderDto) throws ApplicationException, ParseException {
         BillOrder billOrder = convertToEntity(billOrderDto);
+        MenuItem menuItem = menuItemService.findByName(billOrderDto.getItemName());
+
+        billOrder.setPrice(menuItem.getPrice());
         billService.createBill(billOrder);
+
         return ResponseEntity.status(HttpStatus.OK).body("Successfully create bill");
     }
 
@@ -109,6 +131,8 @@ public class BillOrderController {
                 int quantity = e.getQuantity();
                 int totalPrice = menuItemService.getTotalPrice(itemName, quantity);
 
+                if (totalPrice < 0)
+                    totalPrice = quantity * e.getPrice();
                 billReportDto.addItem(itemName, quantity, totalPrice);
             } catch (ApplicationException ex) {
                 // do nothing

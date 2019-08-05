@@ -48,6 +48,13 @@ public interface IMenuItemService {
     public List<MenuItem> searchItem(String keyword) throws ApplicationException;
 
     /**
+     * Find item by name
+     * @param name
+     * @return
+     */
+    public MenuItem findByName(String name);
+
+    /**
      * Get price of this bill base on the menu item name and its quantity
      * @param itemName
      * @param quantity
